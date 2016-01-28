@@ -12,24 +12,30 @@ const reducer = (state = 0, action) => {
 
 const store = window.store = createStore(reducer)
 
+let template = null
+const render = () => {
+  if (template) {
+    Blaze.remove(template)
+  }
+  template = Blaze.render(Template.hello, document.body)
+}
+
 store.subscribe(() => {
-  console.log(store.getState())
+  render()
 })
 
-store.dispatch({ type: 'INCREMENT' })
-store.dispatch({ type: 'INCREMENT' })
-store.dispatch({ type: 'INCREMENT' })
-
-Session.setDefault('counter', 0)
+Meteor.startup(() => {
+  render()
+})
 
 Template.hello.helpers({
   counter: function () {
-    return Session.get('counter')
+    return store.getState()
   }
 })
 
 Template.hello.events({
   'click button': function () {
-    Session.set('counter', Session.get('counter') + 1)
+    store.dispatch({ type: 'INCREMENT' })
   }
 })

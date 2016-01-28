@@ -6,7 +6,7 @@ Installing and developing
 ===
 
 ```bash
-npm i # I think?
+npm i
 meteor
 ```
 

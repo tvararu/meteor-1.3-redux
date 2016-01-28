@@ -17,7 +17,7 @@ const render = () => {
   if (template) {
     Blaze.remove(template)
   }
-  template = Blaze.render(Template.hello, document.body)
+  template = Blaze.render(Template.root, document.body)
 }
 
 store.subscribe(() => {
@@ -28,13 +28,13 @@ Meteor.startup(() => {
   render()
 })
 
-Template.hello.helpers({
+Template.root.helpers({
   counter: function () {
     return store.getState()
   }
 })
 
-Template.hello.events({
+Template.root.events({
   'click button': function () {
     store.dispatch({ type: 'INCREMENT' })
   }

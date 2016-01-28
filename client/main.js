@@ -1,4 +1,5 @@
 import { createStore } from 'redux'
+const Posts = window.Posts = new Meteor.Collection('posts')
 
 const reducer = (state = 0, action) => {
   switch (action.type) {

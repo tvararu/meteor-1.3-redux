@@ -1,25 +1,13 @@
 import { createStore } from 'redux'
 const Posts = window.Posts = new Meteor.Collection('posts')
 
-Posts.find().observe({
-  addedAt (doc, atIndex, before) {
-    console.log('addedAt', doc, atIndex, before)
-  },
-  changedAt (newDoc, oldDoc, atIndex) {
-    console.log('changedAt', newDoc, oldDoc, atIndex)
-  },
-  removedAt (oldDoc, atIndex) {
-    console.log('removedAt', oldDoc, atIndex)
-  },
-  movedTo (doc, fromIndex, toIndex, before) {
-    console.log('movedTo', doc, fromIndex, toIndex, before)
-  }
-})
-
-const reducer = (state = 0, action) => {
+const reducer = (state = [], action) => {
   switch (action.type) {
-    case 'INCREMENT':
-      return state + 1
+    case 'POSTS_ADD':
+      return [
+        ...state,
+        action.payload.post
+      ]
 
     default:
       return state
@@ -45,13 +33,38 @@ Meteor.startup(() => {
 })
 
 Template.root.helpers({
-  counter: function () {
+  posts: function () {
     return store.getState()
   }
 })
 
 Template.root.events({
-  'click button': function () {
-    store.dispatch({ type: 'INCREMENT' })
+  'click .create-post': function (e, t) {
+    const title = t.find('.title-field').value
+    const body = t.find('.body-field').value
+    store.dispatch({ type: 'POSTS_ADD', payload: {
+      post: {title, body},
+      last: true
+    }})
+  }
+})
+
+Posts.find().observe({
+  addedAt (doc, atIndex, before) {
+    console.log('addedAt', doc, atIndex, before)
+    store.dispatch({ type: 'POSTS_ADD', payload: {
+      post: doc,
+      atIndex: atIndex,
+      last: !!before
+    }})
+  },
+  changedAt (newDoc, oldDoc, atIndex) {
+    console.log('changedAt', newDoc, oldDoc, atIndex)
+  },
+  removedAt (oldDoc, atIndex) {
+    console.log('removedAt', oldDoc, atIndex)
+  },
+  movedTo (doc, fromIndex, toIndex, before) {
+    console.log('movedTo', doc, fromIndex, toIndex, before)
   }
 })

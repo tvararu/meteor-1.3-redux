@@ -6,7 +6,18 @@
 </body>
 
 <template name="root">
-  <h1>Welcome to Meteor!</h1>
-  <button>Click Me</button>
-  <p>You've pressed the button {{counter}} times.</p>
+  <h1>Create new posts</h1>
+  <input class="title-field" type="text" placeholder="Title"><br />
+  <textarea class="body-field" placeholder="Body"></textarea><br />
+  <button class="create-post">Create</button>
+  <h1>Posts</h1>
+  {{#each posts}}
+    {{> post}}
+  {{/each}}
+</template>
+
+<template name="post">
+  <hr />
+  <h2>{{ title }}</h2>
+  <p>{{ body }}</p>
 </template>

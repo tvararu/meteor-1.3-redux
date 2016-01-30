@@ -1,6 +1,21 @@
 import { createStore } from 'redux'
 const Posts = window.Posts = new Meteor.Collection('posts')
 
+Posts.find().observe({
+  addedAt (doc, atIndex, before) {
+    console.log('addedAt', doc, atIndex, before)
+  },
+  changedAt (newDoc, oldDoc, atIndex) {
+    console.log('changedAt', newDoc, oldDoc, atIndex)
+  },
+  removedAt (oldDoc, atIndex) {
+    console.log('removedAt', oldDoc, atIndex)
+  },
+  movedTo (doc, fromIndex, toIndex, before) {
+    console.log('movedTo', doc, fromIndex, toIndex, before)
+  }
+})
+
 const reducer = (state = 0, action) => {
   switch (action.type) {
     case 'INCREMENT':
